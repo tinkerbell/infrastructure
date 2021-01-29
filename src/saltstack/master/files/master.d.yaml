@@ -1,0 +1,16 @@
+fileserver_backend:
+  - gitfs
+
+gitfs_remotes:
+  - https://github.com/tinkerbell/infrastructure-saltstack:
+      - root: states
+      - base: main
+      - update_interval: 120
+  - https://github.com/saltstack-formulas/fail2ban-formula:
+      - base: master
+
+ext_pillar:
+  - git:
+      - main https://github.com/tinkerbell/infrastructure-saltstack:
+          - root: pillars
+          - base: main
