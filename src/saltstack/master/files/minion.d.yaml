@@ -1,1 +1,5 @@
-master: localhost
+autosign_grains:
+  - role
+
+grains:
+  role: master

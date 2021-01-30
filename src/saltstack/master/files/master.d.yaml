@@ -1,3 +1,5 @@
+autosign_grains_dir: /etc/salt/autosign-grains
+
 fileserver_backend:
   - gitfs
 
@@ -13,4 +15,4 @@ ext_pillar:
   - git:
       - main https://github.com/tinkerbell/infrastructure-saltstack:
           - root: pillars
-          - base: main
+          - env: main

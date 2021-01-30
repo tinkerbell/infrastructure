@@ -53,11 +53,16 @@ export const createSaltMaster = (config: SaltMasterConfig): SaltMaster => {
       writeFile("minion.d.yaml", "/etc/salt/minion.d/minion.conf"),
     ],
     runcmd: [
-      ["systemctl", "daemon-reload"],
-      ["systemctl", "enable", "salt-master.service"],
-      ["systemctl", "restart", "--no-block", "salt-master.service"],
-      ["systemctl", "enable", "salt-minion.service"],
-      ["systemctl", "restart", "--no-block", "salt-minion.service"],
+      "PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')",
+      "echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf",
+      "echo master: ${PRIVATE_IP} > /etc/salt/minion.d/master.conf",
+      "mkdir -p /etc/salt/autosign-grains/",
+      "echo master > /etc/salt/autosign-grains/role",
+      "systemctl daemon-reload",
+      "systemctl enable salt-master.service",
+      "systemctl restart --no-block salt-master.service",
+      "systemctl enable salt-minion.service",
+      "systemctl restart --no-block salt-minion.service",
     ],
   });
 
