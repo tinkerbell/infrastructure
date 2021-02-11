@@ -87,6 +87,8 @@ ext_pillar:
 	c.AddRunTextFile("/etc/salt/minion.d/minion.conf", `autosign_grains:
 - role
 
+startup_states: highstate
+
 grains:
   role: master`, 0644)
 
