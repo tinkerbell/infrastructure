@@ -90,6 +90,10 @@ ext_pillar:
 - role
 
 startup_states: highstate
+schedule:
+  highstate:
+    function: state.highstate
+    minutes: 15
 
 grains:
   role: master`, 0644)
