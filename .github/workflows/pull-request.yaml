@@ -17,5 +17,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           PULUMI_ROOT: pulumi
-          PULUMI_STACK: production
+          PULUMI_STACK_NAME: production
           COMMENT_ON_PR: 1
