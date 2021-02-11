@@ -26,7 +26,7 @@ certbot:
 
 teleport-tls:
   cmd.run:
-    - name: certbot certonly --standalone --test-cert --preferred-challenges http -d {{ pillar.teleport.domain }}
+    - name: certbot certonly -m "support@tinkerbell.org" --standalone --test-cert --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }}
 
 teleport-github-auth:
   cmd.run:
