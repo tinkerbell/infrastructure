@@ -10,36 +10,40 @@ import (
 	"github.com/tinkerbell/infrastructure/src/internal"
 )
 
-// This is made available to the CreateSaltMaster function through
-// the stack configuratiom.
+// SaltMasterConfig is the struct we allow in the stack configuration
+// to describe the SaltMaster we provision
 type SaltMasterConfig struct {
-	Facilities []equinix.Facility
-	Plan       equinix.Plan
+	Facility equinix.Facility
+	Plan     equinix.Plan
 }
 
+// SaltMaster is the return struct for CreateSaltMaster
 type SaltMaster struct {
 	Device equinix.Device
 }
 
+// CreateSaltMaster Provisions a SaltMaster
 func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructure) (SaltMaster, error) {
 	metalConfig := config.New(ctx, "equinix-metal")
-	projectId := metalConfig.Require("projectId")
+	projectID := metalConfig.Require("projectId")
 
 	stackConfig := config.New(ctx, "")
 	saltMasterConfig := &SaltMasterConfig{}
 	stackConfig.RequireObject("saltMaster", saltMasterConfig)
 
-	facilitiesStringInput := pulumi.StringArray{}
-
-	for _, x := range saltMasterConfig.Facilities {
-		facilitiesStringInput = append(facilitiesStringInput, x)
-	}
+	elasticIP, err := equinix.NewReservedIpBlock(ctx, "salt-master", &equinix.ReservedIpBlockArgs{
+		Facility:  saltMasterConfig.Facility,
+		ProjectId: pulumi.String(projectID),
+		Quantity:  pulumi.Int(1),
+	})
 
 	deviceArgs := equinix.DeviceArgs{
-		ProjectId:       pulumi.String(projectId),
-		Hostname:        pulumi.String(fmt.Sprintf("%s-%s", ctx.Stack(), "salt-master")),
-		Plan:            saltMasterConfig.Plan,
-		Facilities:      facilitiesStringInput,
+		ProjectId: pulumi.String(projectID),
+		Hostname:  pulumi.String(fmt.Sprintf("%s-%s", ctx.Stack(), "salt-master")),
+		Plan:      saltMasterConfig.Plan,
+		Facilities: pulumi.StringArray{
+			saltMasterConfig.Facility,
+		},
 		OperatingSystem: equinix.OperatingSystemUbuntu2004,
 		Tags: pulumi.StringArray{
 			pulumi.String("role:salt-master"),
@@ -53,13 +57,8 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		return SaltMaster{}, err
 	}
 
+	ctx.Export("saltMasterEip", elasticIP.Address)
 	ctx.Export("saltMasterIp", &device.AccessPublicIpv4)
-
-	elasticIp, err := equinix.NewReservedIpBlock(ctx, "salt-master", &equinix.ReservedIpBlockArgs{
-		Facility:  device.DeployedFacility,
-		ProjectId: device.ProjectId,
-		Quantity:  pulumi.Int(1),
-	})
 
 	if err != nil {
 		return SaltMaster{}, err
@@ -67,7 +66,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 
 	_, err = equinix.NewIpAttachment(ctx, "salt-master", &equinix.IpAttachmentArgs{
 		DeviceId:     device.ID(),
-		CidrNotation: elasticIp.CidrNotation,
+		CidrNotation: elasticIP.CidrNotation,
 	})
 
 	if err != nil {
@@ -81,7 +80,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		Type:   pulumi.String("A"),
 		Answers: ns1.RecordAnswerArray{
 			ns1.RecordAnswerArgs{
-				Answer: elasticIp.Address,
+				Answer: elasticIP.Address,
 			},
 		},
 	})

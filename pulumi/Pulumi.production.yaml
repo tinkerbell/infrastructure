@@ -8,8 +8,7 @@ config:
     clientSecret:
       secure: AAABAN1w4CfISmDLLE0q2H1U1p2UbBCNUlmDw/dOUqlcxwOUw/gCsicWiJKWeczgGyStbHLbv12xjhY1C3YtFsTGpL88qxJZ
   infrastructure:saltMaster:
-    facilities:
-      - am6
+    facility: am6
     plan: c3.medium.x86
   ns1:apikey:
     secure: AAABALwxTgseB3PesZlTc19Q+c7jzIr8JUwjI0dHjsP09nc6K+2RKJf1kQevAUOzQRHn8Q==
