@@ -1,13 +1,11 @@
 package master
 
 import (
-	"fmt"
-
 	"github.com/juju/juju/cloudconfig/cloudinit"
 	"github.com/juju/packaging"
 )
 
-func cloudInitConfig() string {
+func cloudInitConfig() []byte {
 	c, err := cloudinit.New("focal")
 
 	if err != nil {
@@ -90,12 +88,12 @@ grains:
 	c.AddRunCmd("systemctl enable salt-minion.service")
 	c.AddRunCmd("systemctl restart --no-block salt-minion.service")
 
-	script, err := c.RenderScript()
+	script, err := c.RenderYAML()
 
 	if err != nil {
 		panic(err)
 	}
 
-	return fmt.Sprintf("#cloud-config\n%s", script)
+	return script
 
 }
