@@ -1,4 +1,0 @@
-name: infrastructure
-runtime: nodejs
-description: Tinkerbell Test Infrastructure
-main: ./src/index.ts

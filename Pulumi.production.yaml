@@ -1,4 +1,0 @@
-config:
-  equinix-metal:authToken:
-    secure: AAABADhY9oDiWhyVpo4EHRAYbVGXT57wjMpgZeWtLmfhx7J/HLgpKWXjOgt2FglxO4GtbcGwU37dgHzisN1vOA==
-  equinix-metal:projectId: 6e695ea0-8176-4705-a6e1-3a698dab9e81

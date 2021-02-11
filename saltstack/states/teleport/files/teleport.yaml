@@ -1,0 +1,26 @@
+teleport:
+  data_dir: /var/lib/teleport
+
+auth_service:
+  enabled: true
+  cluster_name: "tinkerbell"
+  listen_addr: 0.0.0.0:3025
+  tokens:
+    - proxy,node,app:f7adb7ccdf04037bcd2b52ec6010fd6f0caec94ba190b765
+  authentication:
+    type: github
+
+ssh_service:
+  enabled: true
+  labels:
+    env: production
+
+app_service:
+  enabled: true
+  debug_app: true
+
+proxy_service:
+  enabled: true
+  listen_addr: 0.0.0.0:3023
+  web_listen_addr: 0.0.0.0:3080
+  tunnel_listen_addr: 0.0.0.0:3024

@@ -1,0 +1,4 @@
+name: infrastructure
+runtime: go
+description: A minimal Packet.net Go Pulumi program
+main: src/main.go

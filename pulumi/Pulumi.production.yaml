@@ -1,0 +1,8 @@
+config:
+  equinix-metal:authToken:
+    secure: AAABAIeNCRxQf/oHZWownwnyorQzqs9b0AJhIWNM4PTzVqINKQkVeRFAZbLG91oHG4Ans2Y0wgFkGgqekoBxTg==
+  equinix-metal:projectId: 6e695ea0-8176-4705-a6e1-3a698dab9e81
+  infrastructure:saltMaster:
+    facilities:
+      - am6
+    plan: c3.medium.x86
