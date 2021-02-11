@@ -95,7 +95,7 @@ grains:
   'G@role:master':
     - teleport
 `, 0644)
-	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n . domain: %s\n  clientId: %s\n . clientSecret: %s\n", config.domain, config.clientId, config.clientSecret), 0644)
+	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.domain, config.clientId, config.clientSecret), 0644)
 
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
