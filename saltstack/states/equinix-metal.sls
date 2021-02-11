@@ -1,6 +1,6 @@
 {% for network in pillar['network']['addresses'] %}
-{% if False === network['management'] %}
-lo:{{ network['id'] }}:
+{% if False == network['management'] %}
+lo:{{ loop.index }}:
   network.managed:
     - enabled: True
     - type: eth
