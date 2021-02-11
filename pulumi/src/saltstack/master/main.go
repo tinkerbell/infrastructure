@@ -7,6 +7,7 @@ import (
 	"github.com/pulumi/pulumi-ns1/sdk/go/ns1"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
+	"github.com/ryboe/q"
 	"github.com/tinkerbell/infrastructure/src/internal"
 )
 
@@ -20,6 +21,12 @@ type SaltMasterConfig struct {
 // SaltMaster is the return struct for CreateSaltMaster
 type SaltMaster struct {
 	Device equinix.Device
+}
+
+// TeleportConfig
+type TeleportConfig struct {
+	clientID     string `yaml:clientID`
+	clientSecret string `yaml:clientSecret`
 }
 
 // CreateSaltMaster Provisions a SaltMaster
@@ -37,6 +44,19 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		Quantity:  pulumi.Int(1),
 	})
 
+	domain := fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)
+
+	clientID := stackConfig.RequireSecret("teleportClientID")
+	clientSecret := stackConfig.RequireSecret("teleportClientSecret")
+
+	bootstrapConfig := &BootstrapConfig{
+		domain:       domain,
+		clientId:     clientID.ApplyString(func(clientID string) string { return clientID }),
+		clientSecret: clientSecret.ApplyString(func(clientSecret string) string { return clientSecret }),
+	}
+
+	q.Q(bootstrapConfig)
+
 	deviceArgs := equinix.DeviceArgs{
 		ProjectId: pulumi.String(projectID),
 		Hostname:  pulumi.String(fmt.Sprintf("%s-%s", ctx.Stack(), "salt-master")),
@@ -49,7 +69,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 			pulumi.String("role:salt-master"),
 		},
 		BillingCycle: equinix.BillingCycleHourly,
-		UserData:     pulumi.String(cloudInitConfig()),
+		UserData:     pulumi.String(cloudInitConfig(bootstrapConfig)),
 	}
 
 	device, err := equinix.NewDevice(ctx, "salt-master", &deviceArgs)
@@ -76,7 +96,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	// Create DNS record for Teleport
 	_, err = ns1.NewRecord(ctx, "teleport", &ns1.RecordArgs{
 		Zone:   pulumi.String(infrastructure.Zone.Zone),
-		Domain: pulumi.String(fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)),
+		Domain: pulumi.String(domain),
 		Type:   pulumi.String("A"),
 		Answers: ns1.RecordAnswerArray{
 			ns1.RecordAnswerArgs{
