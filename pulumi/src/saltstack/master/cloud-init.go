@@ -1,11 +1,19 @@
 package master
 
 import (
+	"fmt"
+
 	"github.com/juju/juju/cloudconfig/cloudinit"
 	"github.com/juju/packaging"
 )
 
-func cloudInitConfig() string {
+type BootstrapConfig struct {
+	domain       string
+	clientId     string
+	clientSecret string
+}
+
+func cloudInitConfig(config *BootstrapConfig) string {
 	c, err := cloudinit.New("focal")
 
 	if err != nil {
@@ -55,6 +63,7 @@ MA==
 
 	c.AddRunTextFile("/etc/salt/master.d/master.conf", `autosign_grains_dir: /etc/salt/autosign-grains
 fileserver_backend:
+  - roots
   - gitfs
 
 gitfs_remotes:
@@ -64,6 +73,10 @@ gitfs_remotes:
       - update_interval: 120
   - https://github.com/saltstack-formulas/fail2ban-formula:
       - base: master
+
+pillar_roots:
+  base:
+    - /srv/pillar
 
 ext_pillar:
   - git:
@@ -76,6 +89,13 @@ ext_pillar:
 
 grains:
   role: master`, 0644)
+
+	c.AddRunCmd("mkdir -p /srv/pillar")
+	c.AddRunTextFile("/srv/pillar/top.sls", `base:
+  'G@role:master':
+    - teleport
+`, 0644)
+	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n . domain: %s\n  clientId: %s\n . clientSecret: %s\n", config.domain, config.clientId, config.clientSecret), 0644)
 
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
