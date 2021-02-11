@@ -5,7 +5,7 @@ import (
 	"github.com/juju/packaging"
 )
 
-func cloudInitConfig() []byte {
+func cloudInitConfig() string {
 	c, err := cloudinit.New("focal")
 
 	if err != nil {
@@ -15,7 +15,7 @@ func cloudInitConfig() []byte {
 	c.SetSystemUpdate(true)
 
 	c.AddPackageSource(packaging.PackageSource{
-		Name: "salt",
+		Name: "saltstack",
 		URL:  "deb http://repo.saltstack.com/py3/ubuntu/20.04/amd64/3002 focal main",
 		Key: `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2
@@ -88,7 +88,7 @@ grains:
 	c.AddRunCmd("systemctl enable salt-minion.service")
 	c.AddRunCmd("systemctl restart --no-block salt-minion.service")
 
-	script, err := c.RenderYAML()
+	script, err := c.RenderScript()
 
 	if err != nil {
 		panic(err)
