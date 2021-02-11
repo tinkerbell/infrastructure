@@ -4,8 +4,10 @@ import (
 	"fmt"
 
 	"github.com/pulumi/pulumi-equinix-metal/sdk/go/equinix"
+	"github.com/pulumi/pulumi-ns1/sdk/go/ns1"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
+	"github.com/tinkerbell/infrastructure/src/internal"
 )
 
 // This is made available to the CreateSaltMaster function through
@@ -19,7 +21,7 @@ type SaltMaster struct {
 	Device equinix.Device
 }
 
-func CreateSaltMaster(ctx *pulumi.Context) (SaltMaster, error) {
+func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructure) (SaltMaster, error) {
 	metalConfig := config.New(ctx, "equinix-metal")
 	projectId := metalConfig.Require("projectId")
 
@@ -52,6 +54,22 @@ func CreateSaltMaster(ctx *pulumi.Context) (SaltMaster, error) {
 	}
 
 	ctx.Export("saltMasterIp", &device.AccessPublicIpv4)
+
+	// Create DNS record for Teleport
+	_, err = ns1.NewRecord(ctx, "teleport", &ns1.RecordArgs{
+		Zone:   pulumi.String(infrastructure.Zone.Zone),
+		Domain: pulumi.String(fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)),
+		Type:   pulumi.String("A"),
+		Answers: ns1.RecordAnswerArray{
+			ns1.RecordAnswerArgs{
+				Answer: &device.AccessPublicIpv4,
+			},
+		},
+	})
+
+	if err != nil {
+		return SaltMaster{}, err
+	}
 
 	return SaltMaster{
 		Device: *device,

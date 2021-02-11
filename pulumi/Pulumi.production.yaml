@@ -4,5 +4,7 @@ config:
   equinix-metal:projectId: 6e695ea0-8176-4705-a6e1-3a698dab9e81
   infrastructure:saltMaster:
     facilities:
-      - am6
+    - am6
     plan: c3.medium.x86
+  ns1:apikey:
+    secure: AAABALwxTgseB3PesZlTc19Q+c7jzIr8JUwjI0dHjsP09nc6K+2RKJf1kQevAUOzQRHn8Q==
