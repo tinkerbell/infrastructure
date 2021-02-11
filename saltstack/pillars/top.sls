@@ -1,4 +1,3 @@
 base:
   '*':
     - fail2ban
-    

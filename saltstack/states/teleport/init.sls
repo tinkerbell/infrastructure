@@ -11,3 +11,36 @@ teleport-config:
     - owner: root
     - group: root
     - mode: 644
+
+teleport-config-github:
+  file.managed:
+    - name: /etc/teleport.github.yaml
+    - source: salt://{{ slspath }}/files/github.yaml
+    - template: jinja
+    - owner: root
+    - group: root
+    - mode: 0400
+
+certbot:
+  pkg.installed
+
+teleport-tls:
+  cmd.run:
+    - name: certbot certonly --standalone --test-cert --preferred-challenges http -d {{ pillar.teleport.domain }}
+
+teleport-github-auth:
+  cmd.run:
+    - name: tctl create /etc/teleport.github.yaml
+
+teleport-service:
+  service.running:
+    - name: teleport
+    - enable: True
+    - reload: True
+
+# When we're ready
+#
+# ssh-service:
+#   service.dead:
+#     - name: ssh
+#     - enable: False
