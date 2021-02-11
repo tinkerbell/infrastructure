@@ -79,6 +79,8 @@ pillar_roots:
     - /srv/pillar
 
 ext_pillar:
+  - http_json:
+    url: https://metadata.platformequinix.com/metadata
   - git:
       - main https://github.com/tinkerbell/infrastructure:
           - root: saltstack/pillars
