@@ -45,7 +45,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 			pulumi.String("role:salt-master"),
 		},
 		BillingCycle: equinix.BillingCycleHourly,
-		UserData:     pulumi.String(cloudInitConfig),
+		UserData:     pulumi.String(cloudInitConfig()),
 	}
 
 	device, err := equinix.NewDevice(ctx, "salt-master", &deviceArgs)
@@ -55,6 +55,25 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 
 	ctx.Export("saltMasterIp", &device.AccessPublicIpv4)
 
+	elasticIp, err := equinix.NewReservedIpBlock(ctx, "salt-master", &equinix.ReservedIpBlockArgs{
+		Facility:  device.DeployedFacility,
+		ProjectId: device.ProjectId,
+		Quantity:  pulumi.Int(1),
+	})
+
+	if err != nil {
+		return SaltMaster{}, err
+	}
+
+	_, err = equinix.NewIpAttachment(ctx, "salt-master", &equinix.IpAttachmentArgs{
+		DeviceId:     device.ID(),
+		CidrNotation: elasticIp.CidrNotation,
+	})
+
+	if err != nil {
+		return SaltMaster{}, err
+	}
+
 	// Create DNS record for Teleport
 	_, err = ns1.NewRecord(ctx, "teleport", &ns1.RecordArgs{
 		Zone:   pulumi.String(infrastructure.Zone.Zone),
@@ -62,7 +81,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		Type:   pulumi.String("A"),
 		Answers: ns1.RecordAnswerArray{
 			ns1.RecordAnswerArgs{
-				Answer: &device.AccessPublicIpv4,
+				Answer: elasticIp.Address,
 			},
 		},
 	})

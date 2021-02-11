@@ -2,9 +2,14 @@ config:
   equinix-metal:authToken:
     secure: AAABAIeNCRxQf/oHZWownwnyorQzqs9b0AJhIWNM4PTzVqINKQkVeRFAZbLG91oHG4Ans2Y0wgFkGgqekoBxTg==
   equinix-metal:projectId: 6e695ea0-8176-4705-a6e1-3a698dab9e81
+  github:teleportApp:
+    clientId:
+      secure: AAABAO8GBaHyoxsL1Xk/4Rt+kkwBU4HIBR7rd2ri6UWTG8ZPB2dymnYyUuXR5a+Py4NQIQ==
+    clientSecret:
+      secure: AAABAN1w4CfISmDLLE0q2H1U1p2UbBCNUlmDw/dOUqlcxwOUw/gCsicWiJKWeczgGyStbHLbv12xjhY1C3YtFsTGpL88qxJZ
   infrastructure:saltMaster:
     facilities:
-    - am6
+      - am6
     plan: c3.medium.x86
   ns1:apikey:
     secure: AAABALwxTgseB3PesZlTc19Q+c7jzIr8JUwjI0dHjsP09nc6K+2RKJf1kQevAUOzQRHn8Q==
