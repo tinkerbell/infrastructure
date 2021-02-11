@@ -7,7 +7,6 @@ import (
 	"github.com/pulumi/pulumi-ns1/sdk/go/ns1"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
-	"github.com/ryboe/q"
 	"github.com/tinkerbell/infrastructure/src/internal"
 )
 
