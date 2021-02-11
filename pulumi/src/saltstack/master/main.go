@@ -25,8 +25,8 @@ type SaltMaster struct {
 
 // TeleportConfig
 type TeleportConfig struct {
-	clientID     string `yaml:clientID`
-	clientSecret string `yaml:clientSecret`
+	ClientID     string
+	ClientSecret string
 }
 
 // CreateSaltMaster Provisions a SaltMaster
@@ -46,16 +46,14 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 
 	domain := fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)
 
-	clientID := stackConfig.RequireSecret("teleportClientID")
-	clientSecret := stackConfig.RequireSecret("teleportClientSecret")
+	var teleportConfig TeleportConfig
+	stackConfig.RequireObject("teleport", &teleportConfig)
 
 	bootstrapConfig := &BootstrapConfig{
 		domain:       domain,
-		clientId:     clientID.ApplyString(func(clientID string) string { return clientID }),
-		clientSecret: clientSecret.ApplyString(func(clientSecret string) string { return clientSecret }),
+		clientId:     teleportConfig.ClientID,
+		clientSecret: teleportConfig.ClientSecret,
 	}
-
-	q.Q(bootstrapConfig)
 
 	deviceArgs := equinix.DeviceArgs{
 		ProjectId: pulumi.String(projectID),
