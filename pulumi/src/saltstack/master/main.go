@@ -67,7 +67,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	_, err = equinix.NewIpAttachment(ctx, "salt-master", &equinix.IpAttachmentArgs{
 		DeviceId:     device.ID(),
 		CidrNotation: elasticIP.CidrNotation,
-	})
+	}, pulumi.DeleteBeforeReplace(true))
 
 	if err != nil {
 		return SaltMaster{}, err
