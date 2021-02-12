@@ -26,11 +26,7 @@ certbot:
 
 teleport-tls:
   cmd.run:
-    - name: certbot certonly -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }}
-
-teleport-github-auth:
-  cmd.run:
-    - name: tctl create /etc/teleport.github.yaml
+    - name: certbot certonly -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
 
 teleport-service:
   service.running:
@@ -38,9 +34,11 @@ teleport-service:
     - enable: True
     - reload: True
 
-# When we're ready
-#
-# ssh-service:
-#   service.dead:
-#     - name: ssh
-#     - enable: False
+teleport-github-auth:
+  cmd.run:
+    - name: tctl create /etc/teleport.github.yaml
+
+ssh-service:
+  service.dead:
+    - name: ssh
+    - enable: False
