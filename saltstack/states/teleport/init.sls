@@ -47,7 +47,7 @@ teleport-github-auth:
   cmd.run:
     - name: tctl create -f /etc/teleport.github.yaml
 
-ssh-service:
-  service.dead:
-    - name: ssh
-    - enable: False
+# ssh-service:
+#   service.dead:
+#     - name: ssh
+#     - enable: False
