@@ -22,15 +22,14 @@ type SaltMaster struct {
 	Device equinix.Device
 }
 
-// TeleportConfig
 type TeleportConfig struct {
 	ClientID     string
 	ClientSecret string
 }
 
-// GitHubActionsConfig
-type GitHubActionsConfig struct {
-	Token string
+type GitHubConfig struct {
+	Username    string
+	AccessToken string
 }
 
 // CreateSaltMaster Provisions a SaltMaster
@@ -53,14 +52,14 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	var teleportConfig TeleportConfig
 	stackConfig.RequireObject("teleport", &teleportConfig)
 
-	var gitHubActionsConfig GitHubActionsConfig
-	stackConfig.RequireObject("githubActions", &gitHubActionsConfig)
+	var gitHubConfig GitHubConfig
+	stackConfig.RequireObject("github", &gitHubConfig)
 
 	bootstrapConfig := &BootstrapConfig{
-		domain:             domain,
-		clientId:           teleportConfig.ClientID,
-		clientSecret:       teleportConfig.ClientSecret,
-		githubActionsToken: gitHubActionsConfig.Token,
+		domain:            domain,
+		clientId:          teleportConfig.ClientID,
+		clientSecret:      teleportConfig.ClientSecret,
+		githubAccessToken: gitHubConfig.AccessToken,
 	}
 
 	deviceArgs := equinix.DeviceArgs{

@@ -8,10 +8,11 @@ import (
 )
 
 type BootstrapConfig struct {
-	domain             string
-	clientId           string
-	clientSecret       string
-	githubActionsToken string
+	domain            string
+	clientId          string
+	clientSecret      string
+	githubUsername    string
+	githubAccessToken string
 }
 
 func cloudInitConfig(config *BootstrapConfig) string {
@@ -104,17 +105,17 @@ grains:
   'G@role:master':
     - teleport
   'G@role:github-action-runner':
-    - github-actions
+    - github
 `, 0644)
 
 	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.domain, config.clientId, config.clientSecret), 0400)
-	c.AddRunTextFile("/srv/pillar/github-actions.sls", fmt.Sprintf("github:\n  actions:\n    token: %s", config.githubActionsToken), 0400)
+	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n  actions:\n    token: %s", config.githubUsername, config.githubAccessToken), 0400)
 
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
 	c.AddRunCmd("echo master: ${PRIVATE_IP} > /etc/salt/minion.d/master.conf")
 	c.AddRunCmd("mkdir -p /etc/salt/autosign-grains/")
-	c.AddRunCmd("echo master > /etc/salt/autosign-grains/role")
+	c.AddRunCmd("echo -e \"master\ngithub-action-runner\n\" > /etc/salt/autosign-grains/role")
 	c.AddRunCmd("systemctl daemon-reload")
 	c.AddRunCmd("systemctl enable salt-master.service")
 	c.AddRunCmd("systemctl restart --no-block salt-master.service")
