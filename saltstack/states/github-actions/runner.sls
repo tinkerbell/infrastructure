@@ -10,6 +10,7 @@ runner-download:
   archive.extracted:
     - name: /opt/actions-runner
     - source: https://github.com/actions/runner/releases/download/v2.277.1/actions-runner-linux-x64-2.277.1.tar.gz
+    - source_hash: sha256=02d710fc9e0008e641274bb7da7fde61f7c9aa1cbb541a2990d3450cc88f4e98
     - user: root
     - group: root
     - if_missing: /opt/actions-runner/config.sh
