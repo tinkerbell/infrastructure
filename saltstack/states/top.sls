@@ -5,3 +5,6 @@ base:
 
   'G@role:master':
     - teleport
+
+  'G@role:github-action-runner':
+    - github-actions.runner
