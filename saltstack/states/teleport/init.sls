@@ -24,9 +24,17 @@ teleport-config-github:
 certbot:
   pkg.installed
 
-teleport-tls:
+teleport-tls-new:
   cmd.run:
-    - name: certbot certonly -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
+    - name: certbot renew -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
+    - unless:
+      - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
+
+teleport-tls-renew:
+  cmd.run:
+    - name: certbot renew -n
+    - if:
+      - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
 
 teleport-service:
   service.running:
@@ -36,7 +44,7 @@ teleport-service:
 
 teleport-github-auth:
   cmd.run:
-    - name: tctl create /etc/teleport.github.yaml
+    - name: tctl create -f /etc/teleport.github.yaml
 
 ssh-service:
   service.dead:
