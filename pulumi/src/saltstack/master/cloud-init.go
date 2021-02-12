@@ -108,7 +108,7 @@ grains:
 `, 0644)
 
 	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.domain, config.clientId, config.clientSecret), 0400)
-	c.AddRunTextFile("/srv/pillar/github-actions.sls", fmt.Sprintf("token: %s", config.githubActionsToken), 0400)
+	c.AddRunTextFile("/srv/pillar/github-actions.sls", fmt.Sprintf("github:\n  actions:\n    token: %s", config.githubActionsToken), 0400)
 
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
