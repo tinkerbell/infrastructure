@@ -26,15 +26,16 @@ certbot:
 
 teleport-tls-new:
   cmd.run:
-    - name: certbot renew -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
+    - name: certbot certbot -m "support@tinkerbell.org" --test-cert --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
     - unless:
       - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
 
-teleport-tls-renew:
-  cmd.run:
-    - name: certbot renew -n
-    - if:
-      - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
+# We don't want to run this as part of the highstate, but scheduled this once a week?
+# teleport-tls-renew:
+#   cmd.run:
+#     - name: certbot renew -n
+#     - if:
+#       - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
 
 teleport-service:
   service.running:

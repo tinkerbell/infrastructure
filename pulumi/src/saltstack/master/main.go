@@ -54,7 +54,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	stackConfig.RequireObject("teleport", &teleportConfig)
 
 	var gitHubActionsConfig GitHubActionsConfig
-	stackConfig.RequireObject("githubActions", gitHubActionsConfig)
+	stackConfig.RequireObject("githubActions", &gitHubActionsConfig)
 
 	bootstrapConfig := &BootstrapConfig{
 		domain:             domain,
