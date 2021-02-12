@@ -19,8 +19,12 @@ runner-configure:
   cmd.run:
     - name: ./config.sh --url https://github.com/tinkerbell/infrastructure --token {{ pillar['github']['actions']['token'] }}
     - cwd: /opt/actions-runner
+    - require:
+      - archive: runner-download
 
 runner-run:
   cmd.run:
     - name: ./run.sh
     - cwd: /opt/actions-runner
+    - require:
+      - cmd: runner-configure
