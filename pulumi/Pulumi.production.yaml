@@ -6,6 +6,7 @@ config:
     accessKeyID:
       secure: AAABAP9VcplBucaaxC/tKFqdJJ2h/Xl66/MK8zh3TOIi01Fr1ooCYisMxX26/2F54x5OTw==
     bucketName: cncf-tinkerbell
+    bucketLocation: eu-west-2
     secretAccessKey:
       secure: AAABAPnOXMozwcjk7BKRU5uzHR6mx0eRmtR9bxdmRbM5nQSvea5jXSdiZr9MUrFY3KQ53qjLjbhipexUbPqOW79PDwvgz2wq
   infrastructure:github:

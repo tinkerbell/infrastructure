@@ -38,6 +38,7 @@ type AwsConfig struct {
 	AccessKeyID     string
 	SecretAccessKey string
 	BucketName      string
+	BucketLocation  string
 }
 
 // CreateSaltMaster Provisions a SaltMaster
@@ -81,6 +82,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		githubUsername:       gitHubConfig.Username,
 		githubAccessToken:    gitHubConfig.AccessToken,
 		awsBucketName:        awsConfig.BucketName,
+		awsBucketLocation:    awsConfig.BucketLocation,
 		awsAccessKeyID:       awsConfig.AccessKeyID,
 		awsSecretAccessKey:   awsConfig.SecretAccessKey,
 	}

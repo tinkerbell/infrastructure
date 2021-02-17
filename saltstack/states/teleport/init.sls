@@ -24,18 +24,8 @@ teleport-config-github:
 certbot:
   pkg.installed
 
-teleport-tls-new:
-  cmd.run:
-    - name: certbot certonly -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
-    - unless:
-      - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
-
-# We don't want to run this as part of the highstate, but scheduled this once a week?
-# teleport-tls-renew:
-#   cmd.run:
-#     - name: certbot renew -n
-#     - if:
-#       - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
+include:
+  - ./letsencrypt
 
 teleport-service:
   service.running:
@@ -43,9 +33,17 @@ teleport-service:
     - enable: True
     - reload: True
 
+teleport-service-wait:
+  cmd.run:
+    - name: sleep 2
+    - require:
+      - service: teleport-service
+
 teleport-github-auth:
   cmd.run:
     - name: tctl create -f /etc/teleport.github.yaml
+    - require:
+      - cmd: teleport-service-wait
 
 # ssh-service:
 #   service.dead:
