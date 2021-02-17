@@ -2,12 +2,18 @@ config:
   equinix-metal:authToken:
     secure: AAABAIeNCRxQf/oHZWownwnyorQzqs9b0AJhIWNM4PTzVqINKQkVeRFAZbLG91oHG4Ans2Y0wgFkGgqekoBxTg==
   equinix-metal:projectId: 6e695ea0-8176-4705-a6e1-3a698dab9e81
+  infrastructure:aws:
+    accessKeyID:
+      secure: AAABAP9VcplBucaaxC/tKFqdJJ2h/Xl66/MK8zh3TOIi01Fr1ooCYisMxX26/2F54x5OTw==
+    bucketName: cncf-tinkerbell
+    secretAccessKey:
+      secure: AAABAPnOXMozwcjk7BKRU5uzHR6mx0eRmtR9bxdmRbM5nQSvea5jXSdiZr9MUrFY3KQ53qjLjbhipexUbPqOW79PDwvgz2wq
   infrastructure:github:
     accessToken:
       secure: AAABAHQCutSudEbJ4uopPMgA0O3iACgt/pFi2HwgvkwKgYXTT89SF7ZloQZU8KrOkJPXy6YZsPYVnlWGs4aU4WOKxIzbIIoFpA==
     runners:
-    - facility: am6
-      plan: c3.medium.x86
+      - facility: am6
+        plan: c3.medium.x86
     username:
       secure: AAABALF8hZowRxR8bQffkfD420LExY4VEAax0cPBG42cYACJdUQq9LA=
   infrastructure:saltMaster:

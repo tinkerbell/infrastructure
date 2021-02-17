@@ -32,6 +32,12 @@ type GitHubConfig struct {
 	AccessToken string
 }
 
+type AwsConfig struct {
+	AccessKeyID     string
+	SecretAccessKey string
+	BucketName      string
+}
+
 // CreateSaltMaster Provisions a SaltMaster
 func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructure) (SaltMaster, error) {
 	metalConfig := config.New(ctx, "equinix-metal")
@@ -55,11 +61,17 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	var gitHubConfig GitHubConfig
 	stackConfig.RequireObject("github", &gitHubConfig)
 
+	var awsConfig AwsConfig
+	stackConfig.RequireObject("aws", &awsConfig)
+
 	bootstrapConfig := &BootstrapConfig{
-		domain:            domain,
-		clientId:          teleportConfig.ClientID,
-		clientSecret:      teleportConfig.ClientSecret,
-		githubAccessToken: gitHubConfig.AccessToken,
+		domain:             domain,
+		clientId:           teleportConfig.ClientID,
+		clientSecret:       teleportConfig.ClientSecret,
+		githubUsername:     gitHubConfig.Username,
+		githubAccessToken:  gitHubConfig.AccessToken,
+		awsAccessKeyID:     awsConfig.AccessKeyID,
+		awsSecretAccessKey: awsConfig.SecretAccessKey,
 	}
 
 	deviceArgs := equinix.DeviceArgs{
