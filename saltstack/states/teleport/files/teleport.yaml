@@ -6,7 +6,7 @@ auth_service:
   cluster_name: "tinkerbell"
   listen_addr: 0.0.0.0:3025
   tokens:
-    - proxy,node,app:f7adb7ccdf04037bcd2b52ec6010fd6f0caec94ba190b765
+    - proxy,node,app:{{ pillar['teleport']['peerToken'] }}
   authentication:
     type: github
 
