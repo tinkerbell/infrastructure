@@ -5,6 +5,7 @@ import (
 
 	"github.com/pulumi/pulumi-equinix-metal/sdk/go/equinix"
 	"github.com/pulumi/pulumi-ns1/sdk/go/ns1"
+	"github.com/pulumi/pulumi-random/sdk/v3/go/random"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi/config"
 	"github.com/tinkerbell/infrastructure/src/internal"
@@ -25,6 +26,7 @@ type SaltMaster struct {
 type TeleportConfig struct {
 	ClientID     string
 	ClientSecret string
+	PeerToken    *random.RandomUuid
 }
 
 type GitHubConfig struct {
@@ -53,10 +55,18 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		Quantity:  pulumi.Int(1),
 	})
 
-	domain := fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)
-
 	var teleportConfig TeleportConfig
 	stackConfig.RequireObject("teleport", &teleportConfig)
+	teleportDomain := fmt.Sprintf("teleport.%s", infrastructure.Zone.Zone)
+
+	// Generate random PeerToken for Teleport cluster
+	peerToken, err := random.NewRandomUuid(ctx, "teleport-peer-token", nil)
+
+	if err != nil {
+		return SaltMaster{}, err
+	}
+
+	teleportConfig.PeerToken = peerToken
 
 	var gitHubConfig GitHubConfig
 	stackConfig.RequireObject("github", &gitHubConfig)
@@ -65,13 +75,14 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	stackConfig.RequireObject("aws", &awsConfig)
 
 	bootstrapConfig := &BootstrapConfig{
-		domain:             domain,
-		clientId:           teleportConfig.ClientID,
-		clientSecret:       teleportConfig.ClientSecret,
-		githubUsername:     gitHubConfig.Username,
-		githubAccessToken:  gitHubConfig.AccessToken,
-		awsAccessKeyID:     awsConfig.AccessKeyID,
-		awsSecretAccessKey: awsConfig.SecretAccessKey,
+		teleportDomain:       teleportDomain,
+		teleportClientID:     teleportConfig.ClientID,
+		teleportClientSecret: teleportConfig.ClientSecret,
+		githubUsername:       gitHubConfig.Username,
+		githubAccessToken:    gitHubConfig.AccessToken,
+		awsBucketName:        awsConfig.BucketName,
+		awsAccessKeyID:       awsConfig.AccessKeyID,
+		awsSecretAccessKey:   awsConfig.SecretAccessKey,
 	}
 
 	deviceArgs := equinix.DeviceArgs{
@@ -86,7 +97,10 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 			pulumi.String("role:salt-master"),
 		},
 		BillingCycle: equinix.BillingCycleHourly,
-		UserData:     pulumi.String(cloudInitConfig(bootstrapConfig)),
+		UserData: teleportConfig.PeerToken.Result.ApplyString(func(s string) string {
+			bootstrapConfig.teleportPeerToken = s
+			return cloudInitConfig(bootstrapConfig)
+		}),
 	}
 
 	device, err := equinix.NewDevice(ctx, "salt-master", &deviceArgs)
@@ -113,7 +127,7 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 	// Create DNS record for Teleport
 	_, err = ns1.NewRecord(ctx, "teleport", &ns1.RecordArgs{
 		Zone:   pulumi.String(infrastructure.Zone.Zone),
-		Domain: pulumi.String(domain),
+		Domain: pulumi.String(teleportDomain),
 		Type:   pulumi.String("A"),
 		Answers: ns1.RecordAnswerArray{
 			ns1.RecordAnswerArgs{

@@ -14,6 +14,7 @@ require (
 	github.com/juju/packaging v0.0.0-20200421095529-970596d2622a
 	github.com/pulumi/pulumi-equinix-metal/sdk v1.1.0
 	github.com/pulumi/pulumi-ns1/sdk v1.4.0
+	github.com/pulumi/pulumi-random/sdk/v3 v3.0.3
 	github.com/pulumi/pulumi/sdk/v2 v2.20.0
 	github.com/ryboe/q v1.0.12
 )

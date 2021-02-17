@@ -715,6 +715,11 @@ github.com/pulumi/pulumi-equinix-metal/sdk v1.1.0 h1:UX84gCvG641lEdiyDEU+Q23XFug
 github.com/pulumi/pulumi-equinix-metal/sdk v1.1.0/go.mod h1:B7DvAHLBCpvas+ULJdHrfUSTHwj2mXI1t1KnCqTwtLk=
 github.com/pulumi/pulumi-ns1/sdk v1.4.0 h1:Ok+7l51XvdXkHWqZyuSjUTCZYDcoeuyEMDIiUniH3dw=
 github.com/pulumi/pulumi-ns1/sdk v1.4.0/go.mod h1:pOgmEEpfAQFGG3h0hzqEeG1nbh5YufjHHDGv5Iu/oog=
+github.com/pulumi/pulumi-random v1.7.0 h1:X7Zqdn3/OFhsLEPNmoIBr/DKCwd1JD5ozO+mH5z+lbE=
+github.com/pulumi/pulumi-random v3.0.3+incompatible h1:RUjMQjCA4JEf7gwwVjpnFDdIcXUe13UUflSiUncLyjs=
+github.com/pulumi/pulumi-random/sdk v1.7.0 h1:6WL+mI7TlQajNsAwZbmaic8vEAx198x7HFbeeKvOf1I=
+github.com/pulumi/pulumi-random/sdk/v3 v3.0.3 h1:HxlO8ycvmMTWUmbEXJRggXo9IaYqqVXGiaCDiQqpi7Q=
+github.com/pulumi/pulumi-random/sdk/v3 v3.0.3/go.mod h1:xYBcSg4px23cyVSkbsEKftpad6sgK04R7GgX7ynqA18=
 github.com/pulumi/pulumi/sdk/v2 v2.18.0/go.mod h1:fCFhRV6NmidWetmgDPA76efL+s0JqLlS54JJIwfOt+o=
 github.com/pulumi/pulumi/sdk/v2 v2.20.0 h1:Y4lUewm7YhAXz7R/m1M8w5X2o20BnxBq3ka6jmM6bAE=
 github.com/pulumi/pulumi/sdk/v2 v2.20.0/go.mod h1:fCFhRV6NmidWetmgDPA76efL+s0JqLlS54JJIwfOt+o=
