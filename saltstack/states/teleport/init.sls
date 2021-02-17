@@ -26,7 +26,7 @@ certbot:
 
 teleport-tls-new:
   cmd.run:
-    - name: certbot certonly -m "support@tinkerbell.org" --test-cert --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
+    - name: certbot certonly -m "support@tinkerbell.org" --standalone --agree-tos --preferred-challenges http -d {{ pillar.teleport.domain }} -n
     - unless:
       - ls /etc/letsencrypt/live/teleport.tinkerbell.org/cert.pem
 
