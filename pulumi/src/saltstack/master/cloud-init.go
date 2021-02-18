@@ -90,7 +90,7 @@ ext_pillar:
       url: https://metadata.platformequinix.com/metadata
   - git:
       - main https://github.com/tinkerbell/infrastructure:
-          - root: saltstack/pillars
+          - root: saltstack/pillar
           - env: main`, 0644)
 
 	c.AddRunTextFile("/etc/salt/minion.d/minion.conf", `autosign_grains:
