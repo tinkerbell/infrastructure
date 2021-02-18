@@ -15,6 +15,8 @@ config:
     runners:
       - facility: am6
         plan: c3.medium.x86
+      - facility: ams1
+        plan: c1.large.arm
     username:
       secure: AAABALF8hZowRxR8bQffkfD420LExY4VEAax0cPBG42cYACJdUQq9LA=
   infrastructure:saltMaster:
