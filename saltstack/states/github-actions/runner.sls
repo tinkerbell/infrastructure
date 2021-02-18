@@ -1,6 +1,8 @@
 github:
   user.present:
     - groups:
+      # TODO: remove wheel group
+      # TODO: add docker group
       - wheel
 
 runner-mkdir:
@@ -16,6 +18,7 @@ runner-mkdir:
 runner-download:
   archive.extracted:
     - name: /opt/actions-runner
+    # TODO: add conditional based on host architecture
     - source: https://github.com/actions/runner/releases/download/v2.277.1/actions-runner-linux-x64-2.277.1.tar.gz
     - source_hash: sha256=02d710fc9e0008e641274bb7da7fde61f7c9aa1cbb541a2990d3450cc88f4e98
     - user: github
@@ -28,6 +31,7 @@ runner-download:
 
 runner-configure:
   cmd.run:
+    # TODO: do we need to add a labels config here, or is the arch label automatic?
     - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }}
     - cwd: /opt/actions-runner
     - user: github
@@ -47,3 +51,5 @@ runner-enable-service:
     - name: actions.runner.tinkerbell.{{ grains.nodename }}.service
     - enable: True
     - reload: True
+
+# TODO: add docker
