@@ -1,4 +1,8 @@
 /bin/
 /node_modules/
+.kitchen
+.DS_Store
+Gemfile.lock
 package-lock.json
+minion
 yarn.lock
