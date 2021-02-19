@@ -75,7 +75,7 @@ fileserver_backend:
 
 gitfs_remotes:
   - https://github.com/tinkerbell/infrastructure:
-      - root: saltstack/states
+      - root: saltstack/salt
       - base: main
       - update_interval: 120
   - https://github.com/saltstack-formulas/fail2ban-formula:

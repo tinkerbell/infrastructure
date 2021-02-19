@@ -1,7 +1,5 @@
-# I can't include this until the kitchen setup
-# works properly. See `kitchen.yml`.
-# include:
-#   - docker
+include:
+  - docker
   
 github:
   user.present:
