@@ -8,3 +8,4 @@ minion
 yarn.lock
 .bundle
 /saltstack/bin/
+.vscode
