@@ -1,4 +1,4 @@
-{% set response = salt['http.query'](name="https://api.github.com/orgs/tinkerbell/actions/runners/registration-token", method="POST", header="Accept: application/vnd.github.v3+json", username=pillar['github']['username'], password=pillar['github']['accessToken']).body | load_json %}
+{% set response = salt['http.query'](url="https://api.github.com/orgs/tinkerbell/actions/runners/registration-token", method="POST", header="Accept: application/vnd.github.v3+json", username=pillar['github']['username'], password=pillar['github']['accessToken']).body | load_json %}
 
 runner-configure:
   cmd.run:
