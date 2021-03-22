@@ -5,14 +5,14 @@ runner-configure:
     # TODO: do we need to add a labels config here, or is the arch label automatic?
     - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }}
     - cwd: /opt/actions-runner
-    - user: github
+    - runas: github
     - require:
       - archive: runner-download
 
 runner-install-service:
   cmd.run:
     - name: ./svc.sh install github
-    - user: github
+    - runas: github
     - cwd: /opt/actions-runner
     - require:
       - cmd: runner-configure
