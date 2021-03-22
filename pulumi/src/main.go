@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/pulumi/pulumi/sdk/v2/go/pulumi"
+	assets "github.com/tinkerbell/infrastructure/src/assets"
 	tinkdns "github.com/tinkerbell/infrastructure/src/dns/tinkerbell.org"
 	runners "github.com/tinkerbell/infrastructure/src/github-actions"
 	"github.com/tinkerbell/infrastructure/src/internal"
@@ -29,6 +30,11 @@ func main() {
 
 		_, err = runners.CreateGitHubActionRunners(ctx, infrastructure)
 
+		if err != nil {
+			return err
+		}
+
+		_, err = assets.CreateAssetsDns(ctx, infrastructure)
 		if err != nil {
 			return err
 		}
