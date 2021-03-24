@@ -20,7 +20,7 @@ func cloudInitConfig(config *MinionConfig) string {
 	c.SetSystemUpdate(true)
 
 	c.AddRunCmd("curl -fsSL https://bootstrap.saltproject.io -o install_salt.sh")
-	c.AddRunCmd("sh install_salt.sh -P -x python3")
+	c.AddRunCmd("sh install_salt.sh -P -x python3 ")
 	c.AddRunTextFile("/etc/salt/minion.d/minion.conf", `autosign_grains:
 - role
 

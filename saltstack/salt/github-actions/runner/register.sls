@@ -3,7 +3,7 @@
 runner-configure:
   cmd.run:
     # TODO: do we need to add a labels config here, or is the arch label automatic?
-    - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }}
+    - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }} --unattended --replace
     - cwd: /opt/actions-runner
     - runas: github
     - require:
