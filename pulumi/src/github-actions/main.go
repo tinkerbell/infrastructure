@@ -50,10 +50,10 @@ func CreateGitHubActionRunners(ctx *pulumi.Context, infrastructure internal.Infr
 				pulumi.String("role:github-action-runner"),
 			},
 			BillingCycle: equinix.BillingCycleHourly,
-			UserData: pulumi.All(infrastructure.SaltMasterIp).ApplyT(func(args []interface{}) string {
+			UserData: pulumi.All(infrastructure.SaltMasterIp, runner.States).ApplyT(func(args []interface{}) string {
 				return cloudInitConfig(&MinionConfig{
 					MasterIp: args[0].(string),
-					States:   runner.States,
+					States:   args[1].([]string),
 				})
 			}).(pulumi.StringOutput),
 		}
