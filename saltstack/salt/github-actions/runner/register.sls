@@ -3,7 +3,7 @@
 runner-configure:
   cmd.run:
     # TODO: do we need to add a labels config here, or is the arch label automatic?
-    - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }} --unattended --replace
+    - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }} --unattended --replace {% if grains['gha_runner_states'] is defined %}--labels {{ grains['gha_runner_states'] | join(', ') }}{% endif %}
     - cwd: /opt/actions-runner
     - runas: github
     - require:
