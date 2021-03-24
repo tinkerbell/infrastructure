@@ -17,6 +17,8 @@ config:
     runners:
       - facility: am6
         plan: c3.medium.x86
+        states:
+          - vagrant
       - facility: ams1
         plan: c1.large.arm
     username:

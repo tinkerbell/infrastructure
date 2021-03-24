@@ -18,6 +18,7 @@ type GitHubConfig struct {
 type GitHubActionRunnerConfig struct {
 	Facility equinix.Facility
 	Plan     equinix.Plan
+	States   []string
 }
 
 // GitHubActionRunner is the return struct for CreateSaltMaster
@@ -52,6 +53,7 @@ func CreateGitHubActionRunners(ctx *pulumi.Context, infrastructure internal.Infr
 			UserData: pulumi.All(infrastructure.SaltMasterIp).ApplyT(func(args []interface{}) string {
 				return cloudInitConfig(&MinionConfig{
 					MasterIp: args[0].(string),
+					States:   runner.States,
 				})
 			}).(pulumi.StringOutput),
 		}

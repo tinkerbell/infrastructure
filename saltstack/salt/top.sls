@@ -9,3 +9,4 @@ base:
   'G@role:github-action-runner':
     - github-actions.runner
     - github-actions.runner.register
+    - github-actions.runner.states
