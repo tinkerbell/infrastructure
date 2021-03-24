@@ -12,7 +12,6 @@ runner-configure:
 runner-install-service:
   cmd.run:
     - name: ./svc.sh install github
-    - runas: github
     - cwd: /opt/actions-runner
     - require:
       - cmd: runner-configure
