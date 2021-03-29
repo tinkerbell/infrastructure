@@ -7,6 +7,7 @@ base:
     - teleport
 
   'G@role:github-action-runner':
+    - go
     - github-actions.runner
     - github-actions.runner.register
     - github-actions.runner.states
