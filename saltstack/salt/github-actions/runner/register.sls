@@ -2,10 +2,12 @@
 
 runner-configure:
   cmd.run:
-    # TODO: do we need to add a labels config here, or is the arch label automatic?
     - name: ./config.sh --url https://github.com/tinkerbell --token {{ response['token'] }} --unattended --replace {% if grains['gha_runner_states'] is defined %}--labels {{ grains['gha_runner_states'] | join(', ') }}{% endif %}
     - cwd: /opt/actions-runner
     - runas: github
+    - unless:
+      - fun: file.file_exists
+        path: /etc/systemd/system/actions.runner.tinkerbell.{{ grains.nodename }}.service
     - require:
       - archive: runner-download
 
@@ -13,6 +15,9 @@ runner-install-service:
   cmd.run:
     - name: ./svc.sh install github
     - cwd: /opt/actions-runner
+    - unless:
+      - fun: file.file_exists
+        path: /etc/systemd/system/actions.runner.tinkerbell.{{ grains.nodename }}.service
     - require:
       - cmd: runner-configure
 
