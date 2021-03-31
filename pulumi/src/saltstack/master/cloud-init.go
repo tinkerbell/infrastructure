@@ -75,14 +75,19 @@ grains:
 	c.AddRunTextFile("/srv/pillar/top.sls", `base:
   '*':
     - base
+	- teleport.node
+
   'G@role:master':
     - aws
     - teleport
+	
   'G@role:github-action-runner':
     - github
 `, 0644)
 
-	c.AddRunTextFile("/srv/pillar/teleport.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n  peerToken: %s\n", config.teleportDomain, config.teleportClientID, config.teleportClientSecret, config.teleportPeerToken), 0400)
+	c.AddRunCmd("mkdir -p /srv/pillar/teleport")
+	c.AddRunTextFile("/srv/pillar/teleport/init.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.teleportDomain, config.teleportClientID, config.teleportClientSecret), 0400)
+	c.AddRunTextFile("/srv/pillar/teleport/node.sls", fmt.Sprintf("teleport:\n  peerToken: %s\n", config.teleportPeerToken), 0400)
 	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n", config.githubUsername, config.githubAccessToken), 0400)
 	c.AddRunTextFile("/srv/pillar/aws.sls", fmt.Sprintf("aws:\n  accessKeyID: %s\n  secretAccessKey: %s\n  bucketName: %s\n  bucketLocation: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketName, config.awsBucketLocation), 0400)
 

@@ -1,8 +1,6 @@
-teleport-install:
-  pkg.installed:
-    - sources:
-      - teleport: https://get.gravitational.com/teleport_5.1.0_amd64.deb
-
+include:
+  - teleport.install
+    
 teleport-config:
   file.managed:
     - name: /etc/teleport.yaml
