@@ -68,8 +68,13 @@ schedule:
 grains:
   role: master`, 0644)
 
+	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
+
 	c.AddRunCmd("mkdir -p /srv/pillar")
+	c.AddRunCmd("echo salt_master_private_ipv4: ${$PRIVATE_IP} > /srv/pillar/base.sls")
 	c.AddRunTextFile("/srv/pillar/top.sls", `base:
+  '*':
+    - base
   'G@role:master':
     - aws
     - teleport
@@ -81,7 +86,6 @@ grains:
 	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n", config.githubUsername, config.githubAccessToken), 0400)
 	c.AddRunTextFile("/srv/pillar/aws.sls", fmt.Sprintf("aws:\n  accessKeyID: %s\n  secretAccessKey: %s\n  bucketName: %s\n  bucketLocation: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketName, config.awsBucketLocation), 0400)
 
-	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
 	c.AddRunCmd("echo master: ${PRIVATE_IP} > /etc/salt/minion.d/master.conf")
 	c.AddRunCmd("mkdir -p /etc/salt/autosign-grains/")

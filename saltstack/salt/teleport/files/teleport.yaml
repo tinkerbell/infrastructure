@@ -4,7 +4,7 @@ teleport:
 auth_service:
   enabled: true
   cluster_name: "tinkerbell"
-  listen_addr: 0.0.0.0:3025
+  listen_addr: "{{ pillar['salt_master_private_ipv4'] }}:3025"
   tokens:
     - proxy,node,app:{{ pillar['teleport']['peerToken'] }}
   authentication:

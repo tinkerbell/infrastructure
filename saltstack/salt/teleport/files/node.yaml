@@ -1,0 +1,13 @@
+auth_service:
+  enabled: false
+
+proxy_service:
+  enabled: false
+
+ssh_service:
+  enabled: true
+
+teleport:
+  auth_token: "{{ pillar['teleport']['peerToken'] }}"
+  auth_servers:
+    - "{{ pillar['salt_master_private_ipv4'] }}:3025"
