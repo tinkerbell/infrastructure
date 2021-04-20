@@ -1,7 +1,7 @@
 include:
   - teleport.install
     
-teleport-config:
+teleport-node-config:
   file.managed:
     - name: /etc/teleport.yaml
     - source: salt://{{ slspath }}/files/node.yaml
@@ -10,7 +10,7 @@ teleport-config:
     - group: root
     - mode: 644
 
-teleport-service:
+teleport-node-service:
   service.running:
     - name: teleport
     - enable: True
