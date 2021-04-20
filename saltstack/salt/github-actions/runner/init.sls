@@ -6,7 +6,7 @@ github:
     - groups:
       - docker
 
-install:
+git-lfs-install:
   pkg.installed:
     - pkgs:
       - git-lfs
