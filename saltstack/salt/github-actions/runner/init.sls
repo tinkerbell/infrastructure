@@ -6,6 +6,11 @@ github:
     - groups:
       - docker
 
+install:
+  pkg.installed:
+    - pkgs:
+      - git-lfs
+
 runner-mkdir:
   file.directory:
     - name: /opt/actions-runner
