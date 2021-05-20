@@ -1,8 +1,11 @@
 letsencrypt-create-backup:
-    cmd.run:
-        - name: tar -cvf /tmp/letsencrypt.tar /etc/letsencrypt
+  cmd.run:
+    - name: tar -cvf /tmp/letsencrypt.tar ./letsencrypt
+    - cwd: /etc
 
-letsencrypt-s3-sync-up:
-  file.managed:
-    - name: s3://{{ pillar['s3.bucketName'] }}/{{ grains.nodename }}/letsencrypt.tar
-    - source: /tmp/letsencrypt.tar
+letsencrypt-upload-backup:
+  module.run:
+    - name: s3.put
+    - bucket: {{ pillar['s3']['bucketName'] }}            
+    - local_file: /tmp/letsencrypt.tar
+    - path: {{ grains.nodename }}/letsencrypt.tar

@@ -27,8 +27,9 @@ awscli:
 
 teleport-s3-sync-down:
   archive.extracted:
-    - name: /etc/letsencrypt
-    - source: s3://{{ pillar.s3.bucketName }}/{{ grains.nodename }}/letsencrypt.tar
+    - name: /etc
+    - source: s3://{{ pillar['s3']['bucketName'] }}/{{ grains.nodename }}/letsencrypt.tar
+    - skip_verify: True
     - user: root
     - group: root
     - if_missing: /etc/letsencrypt
