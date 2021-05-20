@@ -79,6 +79,7 @@ grains:
 
   'G@role:master':
     - aws
+	- aws-eurgh # https://github.com/saltstack/salt/issues/60222
     - teleport
 	
   'G@role:github-action-runner':
@@ -90,6 +91,9 @@ grains:
 	c.AddRunTextFile("/srv/pillar/teleport/node.sls", fmt.Sprintf("teleport:\n  peerToken: %s\n", config.teleportPeerToken), 0400)
 	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n", config.githubUsername, config.githubAccessToken), 0400)
 	c.AddRunTextFile("/srv/pillar/aws.sls", fmt.Sprintf("s3:\n  keyid: %s\n  key: %s\n  location: %s\n  bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0400)
+
+	// https://github.com/saltstack/salt/issues/60222
+	c.AddRunTextFile("/srv/pillar/aws-eurgh.sls", fmt.Sprintf("s3.keyid: %s\ns3.key: %s\ns3.location: %s\ns3.bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0400)
 
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
 	c.AddRunCmd("echo master: ${PRIVATE_IP} > /etc/salt/minion.d/master.conf")
