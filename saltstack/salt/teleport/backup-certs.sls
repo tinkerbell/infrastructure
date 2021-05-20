@@ -4,5 +4,5 @@ letsencrypt-create-backup:
 
 letsencrypt-s3-sync-up:
   file.managed:
-    - name: s3://{{ pillar.s3.bucketName }}/{{ grains.nodename }}/letsencrypt.tar
+    - name: s3://{{ pillar['s3.bucketName'] }}/{{ grains.nodename }}/letsencrypt.tar
     - source: /tmp/letsencrypt.tar
