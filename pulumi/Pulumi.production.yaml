@@ -19,6 +19,10 @@ config:
         plan: c3.medium.x86
         states:
           - vagrant
+      - facility: am6
+        plan: c3.medium.x86
+        states:
+          - vagrant-libvirt
       - facility: ams1
         plan: c1.large.arm
     username:
