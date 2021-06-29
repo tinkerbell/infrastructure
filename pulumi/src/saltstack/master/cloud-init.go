@@ -71,17 +71,17 @@ grains:
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 
 	c.AddRunCmd("mkdir -p /srv/pillar")
-	c.AddRunCmd("echo salt_master_private_ipv4: ${$PRIVATE_IP} > /srv/pillar/base.sls")
+	c.AddRunCmd("echo salt_master_private_ipv4: ${PRIVATE_IP} > /srv/pillar/base.sls")
 	c.AddRunTextFile("/srv/pillar/top.sls", `base:
   '*':
     - base
-	- teleport.node
+    - teleport.node
 
   'G@role:master':
     - aws
-	- aws-eurgh # https://github.com/saltstack/salt/issues/60222
+    - aws-eurgh # https://github.com/saltstack/salt/issues/60222
     - teleport
-	
+
   'G@role:github-action-runner':
     - github
 `, 0644)

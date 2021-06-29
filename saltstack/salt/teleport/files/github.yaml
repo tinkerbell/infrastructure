@@ -3,8 +3,8 @@ version: v3
 metadata:
   name: github
 spec:
-  client_id: {{ pillar.teleport.clientId }}
-  client_secret: {{ pillar.teleport.clientSecret }}
+  client_id: { { pillar.teleport.clientId } }
+  client_secret: { { pillar.teleport.clientSecret } }
   display: Github
   redirect_url: https://{{ pillar.teleport.domain }}/v1/webapi/github/callback
   teams_to_logins:
