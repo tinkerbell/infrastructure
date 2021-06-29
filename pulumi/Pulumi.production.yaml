@@ -15,12 +15,12 @@ config:
     accessToken:
       secure: AAABAHQCutSudEbJ4uopPMgA0O3iACgt/pFi2HwgvkwKgYXTT89SF7ZloQZU8KrOkJPXy6YZsPYVnlWGs4aU4WOKxIzbIIoFpA==
     runners:
-      - facility: am6
-        plan: c3.medium.x86
+      - facility: ams1
+        plan: c1.xlarge.x86
         states:
           - vagrant
-      - facility: am6
-        plan: c3.medium.x86
+      - facility: ams1
+        plan: c1.xlarge.x86
         states:
           - vagrant-libvirt
       - facility: ams1
@@ -28,8 +28,8 @@ config:
     username:
       secure: AAABALF8hZowRxR8bQffkfD420LExY4VEAax0cPBG42cYACJdUQq9LA=
   infrastructure:saltMaster:
-    facility: am6
-    plan: c3.medium.x86
+    facility: ams1
+    plan: c1.xlarge.x86
   infrastructure:teleport:
     clientID:
       secure: AAABAO8GBaHyoxsL1Xk/4Rt+kkwBU4HIBR7rd2ri6UWTG8ZPB2dymnYyUuXR5a+Py4NQIQ==
