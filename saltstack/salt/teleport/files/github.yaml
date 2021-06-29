@@ -11,4 +11,4 @@ spec:
     - organization: tinkerbell
       team: infrastructure-access
       logins:
-        - root
+        - admin
