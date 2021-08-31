@@ -14,19 +14,19 @@ type GitHubConfig struct {
 }
 
 // GitHubActionRunnerConfig is the struct we allow in the stack configuration
-// to describe the GitHubActionRunner we provision
+// to describe the GitHubActionRunner we provision.
 type GitHubActionRunnerConfig struct {
 	Facility equinix.Facility
 	Plan     equinix.Plan
 	States   []string
 }
 
-// GitHubActionRunner is the return struct for CreateSaltMaster
+// GitHubActionRunner is the return struct for CreateSaltMaster.
 type GitHubActionRunners struct {
 	Devices []equinix.Device
 }
 
-// CreateGitHubActionRunner Provisions a GitHub Action Runner
+// CreateGitHubActionRunner Provisions a GitHub Action Runner.
 func CreateGitHubActionRunners(ctx *pulumi.Context, infrastructure internal.Infrastructure) (GitHubActionRunners, error) {
 	metalConfig := config.New(ctx, "equinix-metal")
 	projectID := metalConfig.Require("projectId")
@@ -50,16 +50,15 @@ func CreateGitHubActionRunners(ctx *pulumi.Context, infrastructure internal.Infr
 				pulumi.String("role:github-action-runner"),
 			},
 			BillingCycle: equinix.BillingCycleHourly,
-			UserData: pulumi.All(infrastructure.SaltMasterIp, runner.States).ApplyT(func(args []interface{}) string {
+			UserData: pulumi.All(infrastructure.SaltMasterIP, runner.States).ApplyT(func(args []interface{}) string {
 				return cloudInitConfig(&MinionConfig{
-					MasterIp: args[0].(string),
+					MasterIP: args[0].(string),
 					States:   args[1].([]string),
 				})
 			}).(pulumi.StringOutput),
 		}
 
 		device, err := equinix.NewDevice(ctx, fmt.Sprintf("github-action-runner-%d", i), &deviceArgs)
-
 		if err != nil {
 			return GitHubActionRunners{}, err
 		}

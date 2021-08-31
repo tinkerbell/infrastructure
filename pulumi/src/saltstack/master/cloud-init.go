@@ -21,7 +21,6 @@ type BootstrapConfig struct {
 
 func cloudInitConfig(config *BootstrapConfig) string {
 	c, err := cloudinit.New("focal")
-
 	if err != nil {
 		panic(err)
 	}
@@ -54,7 +53,7 @@ ext_pillar:
   - git:
       - main https://github.com/tinkerbell/infrastructure:
           - root: saltstack/pillar
-          - env: main`, 0644)
+          - env: main`, 0o644)
 
 	c.AddRunTextFile("/etc/salt/minion.d/minion.conf", `autosign_grains:
 - role
@@ -66,7 +65,7 @@ schedule:
     minutes: 15
 
 grains:
-  role: master`, 0644)
+  role: master`, 0o644)
 
 	c.AddRunCmd("PRIVATE_IP=$(curl -s https://metadata.platformequinix.com/metadata | jq -r '.network.addresses | map(select(.public==false)) | first | .address')")
 
@@ -84,16 +83,16 @@ grains:
 
   'G@role:github-action-runner':
     - github
-`, 0644)
+`, 0o644)
 
 	c.AddRunCmd("mkdir -p /srv/pillar/teleport")
-	c.AddRunTextFile("/srv/pillar/teleport/init.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.teleportDomain, config.teleportClientID, config.teleportClientSecret), 0400)
-	c.AddRunTextFile("/srv/pillar/teleport/node.sls", fmt.Sprintf("teleport:\n  peerToken: %s\n", config.teleportPeerToken), 0400)
-	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n", config.githubUsername, config.githubAccessToken), 0400)
-	c.AddRunTextFile("/srv/pillar/aws.sls", fmt.Sprintf("s3:\n  keyid: %s\n  key: %s\n  location: %s\n  bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0400)
+	c.AddRunTextFile("/srv/pillar/teleport/init.sls", fmt.Sprintf("teleport:\n  domain: %s\n  clientId: %s\n  clientSecret: %s\n", config.teleportDomain, config.teleportClientID, config.teleportClientSecret), 0o400)
+	c.AddRunTextFile("/srv/pillar/teleport/node.sls", fmt.Sprintf("teleport:\n  peerToken: %s\n", config.teleportPeerToken), 0o400)
+	c.AddRunTextFile("/srv/pillar/github.sls", fmt.Sprintf("github:\n  username: %s\n  accessToken: %s\n", config.githubUsername, config.githubAccessToken), 0o400)
+	c.AddRunTextFile("/srv/pillar/aws.sls", fmt.Sprintf("s3:\n  keyid: %s\n  key: %s\n  location: %s\n  bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0o400)
 
 	// https://github.com/saltstack/salt/issues/60222
-	c.AddRunTextFile("/srv/pillar/aws-eurgh.sls", fmt.Sprintf("s3.keyid: %s\ns3.key: %s\ns3.location: %s\ns3.bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0400)
+	c.AddRunTextFile("/srv/pillar/aws-eurgh.sls", fmt.Sprintf("s3.keyid: %s\ns3.key: %s\ns3.location: %s\ns3.bucketName: %s\n", config.awsAccessKeyID, config.awsSecretAccessKey, config.awsBucketLocation, config.awsBucketName), 0o400)
 
 	c.AddRunCmd("echo interface: ${PRIVATE_IP} > /etc/salt/master.d/private-interface.conf")
 	c.AddRunCmd("echo master: ${PRIVATE_IP} > /etc/salt/minion.d/master.conf")
@@ -106,11 +105,9 @@ grains:
 	c.AddRunCmd("systemctl restart --no-block salt-minion.service")
 
 	script, err := c.RenderScript()
-
 	if err != nil {
 		panic(err)
 	}
 
 	return script
-
 }

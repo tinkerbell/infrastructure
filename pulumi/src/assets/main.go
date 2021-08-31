@@ -6,11 +6,11 @@ import (
 	"github.com/tinkerbell/infrastructure/src/internal"
 )
 
-type AssetsDns struct {
+type DNS struct {
 	Cname *ns1.Record
 }
 
-func CreateAssetsDns(ctx *pulumi.Context, infrastructure internal.Infrastructure) (AssetsDns, error) {
+func CreateAssetsDNS(ctx *pulumi.Context, infrastructure internal.Infrastructure) (DNS, error) {
 	// This verification record is required for Cloudflare to issue a certificate for this domain
 	_, err := ns1.NewRecord(ctx, "assets-cname-verification", &ns1.RecordArgs{
 		Zone:   pulumi.String(infrastructure.Zone.Zone),
@@ -22,9 +22,8 @@ func CreateAssetsDns(ctx *pulumi.Context, infrastructure internal.Infrastructure
 			},
 		},
 	})
-
 	if err != nil {
-		return AssetsDns{}, err
+		return DNS{}, err
 	}
 
 	// assets.tinkerbell.org
@@ -41,12 +40,11 @@ func CreateAssetsDns(ctx *pulumi.Context, infrastructure internal.Infrastructure
 			},
 		},
 	})
-
 	if err != nil {
-		return AssetsDns{}, err
+		return DNS{}, err
 	}
 
-	return AssetsDns{
+	return DNS{
 		Cname: cname,
 	}, nil
 }
