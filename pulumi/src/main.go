@@ -33,7 +33,7 @@ func main() {
 			return err
 		}
 
-		_, err = assets.CreateAssetsDNS(ctx, infrastructure)
+		_, err = assets.CreateDNS(ctx, infrastructure)
 		if err != nil {
 			return err
 		}

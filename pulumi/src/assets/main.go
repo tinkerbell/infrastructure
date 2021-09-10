@@ -10,7 +10,7 @@ type DNS struct {
 	Cname *ns1.Record
 }
 
-func CreateAssetsDNS(ctx *pulumi.Context, infrastructure internal.Infrastructure) (DNS, error) {
+func CreateDNS(ctx *pulumi.Context, infrastructure internal.Infrastructure) (DNS, error) {
 	// This verification record is required for Cloudflare to issue a certificate for this domain
 	_, err := ns1.NewRecord(ctx, "assets-cname-verification", &ns1.RecordArgs{
 		Zone:   pulumi.String(infrastructure.Zone.Zone),
