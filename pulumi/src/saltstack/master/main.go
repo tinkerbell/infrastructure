@@ -12,13 +12,13 @@ import (
 )
 
 // SaltMasterConfig is the struct we allow in the stack configuration
-// to describe the SaltMaster we provision
+// to describe the SaltMaster we provision.
 type SaltMasterConfig struct {
 	Facility equinix.Facility
 	Plan     equinix.Plan
 }
 
-// SaltMaster is the return struct for CreateSaltMaster
+// SaltMaster is the return struct for CreateSaltMaster.
 type SaltMaster struct {
 	Device equinix.Device
 }
@@ -41,7 +41,7 @@ type AwsConfig struct {
 	BucketLocation  string
 }
 
-// CreateSaltMaster Provisions a SaltMaster
+// CreateSaltMaster Provisions a SaltMaster.
 func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructure) (SaltMaster, error) {
 	metalConfig := config.New(ctx, "equinix-metal")
 	projectID := metalConfig.Require("projectId")
@@ -55,6 +55,9 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 		ProjectId: pulumi.String(projectID),
 		Quantity:  pulumi.Int(1),
 	})
+	if err != nil {
+		return SaltMaster{}, err
+	}
 
 	var teleportConfig TeleportConfig
 	stackConfig.RequireObject("teleport", &teleportConfig)
@@ -62,7 +65,6 @@ func CreateSaltMaster(ctx *pulumi.Context, infrastructure internal.Infrastructur
 
 	// Generate random PeerToken for Teleport cluster
 	peerToken, err := random.NewRandomUuid(ctx, "teleport-peer-token", nil)
-
 	if err != nil {
 		return SaltMaster{}, err
 	}

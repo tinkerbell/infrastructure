@@ -10,5 +10,5 @@ import (
 // with DNS zone being the first use-case.
 type Infrastructure struct {
 	Zone         ns1.LookupZoneResult
-	SaltMasterIp pulumi.StringOutput
+	SaltMasterIP pulumi.StringOutput
 }

@@ -11,7 +11,7 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		zone, err := tinkdns.ManageDns(ctx)
+		zone, err := tinkdns.ManageDNS(ctx)
 		if err != nil {
 			return err
 		}
@@ -21,12 +21,11 @@ func main() {
 		}
 
 		saltMaster, err := master.CreateSaltMaster(ctx, infrastructure)
-
 		if err != nil {
 			return err
 		}
 
-		infrastructure.SaltMasterIp = saltMaster.Device.AccessPrivateIpv4
+		infrastructure.SaltMasterIP = saltMaster.Device.AccessPrivateIpv4
 
 		_, err = runners.CreateGitHubActionRunners(ctx, infrastructure)
 
@@ -34,7 +33,7 @@ func main() {
 			return err
 		}
 
-		_, err = assets.CreateAssetsDns(ctx, infrastructure)
+		_, err = assets.CreateDNS(ctx, infrastructure)
 		if err != nil {
 			return err
 		}
